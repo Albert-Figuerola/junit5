@@ -12,11 +12,13 @@ class CuentaTest {
     @Test
     void testNombreCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("123.47"));
-        String esperado = "Andres";
+
+        String esperado = "Andrs";
         String real = cuenta.getPersona();
-        assertNotNull(real);
-        assertEquals(esperado, real);
-        assertTrue(real.equals("Andres"));
+
+        assertNotNull(real, () -> "La cuenta no puede ser nula");
+        assertEquals(esperado, real, () ->  "El nombre de la cuenta no coincide");
+        assertTrue(real.equals("Andres"), () -> "Nombre cuenta esperado igual al real");
     }
 
     @Test
@@ -96,9 +98,9 @@ class CuentaTest {
         banco.transferir(cuenta2, cuenta1, new BigDecimal(500));
 
         assertAll(
-                () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
-                () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()),
-                () -> assertEquals(2, banco.getCuentas().size()),
+                () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString(), () -> "Saldo de cuenta 2 no es el esperado"),
+                () -> assertEquals("3000", cuenta1.getSaldo().toPlainString(), () -> "Saldo de cuenta 1 no es el esperado"),
+                () -> assertEquals(2, banco.getCuentas().size(), () -> "El banco no tiene las cuentas esperadas"),
                 () -> assertEquals("Banco del Estado", cuenta1.getBanco().getNombre()),
                 () -> assertEquals("Andres", banco.getCuentas().stream()
                         .filter(c -> c.getPersona().equals("Andres"))
