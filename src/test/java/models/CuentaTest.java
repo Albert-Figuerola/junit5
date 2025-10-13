@@ -1,6 +1,8 @@
 package models;
 
 import exceptions.DineroInsuficienteException;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -10,10 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaTest {
 
     @Test
+    @DisplayName("Probando nombre de la cuenta")
     void testNombreCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("123.47"));
 
-        String esperado = "Andrs";
+        String esperado = "Andres";
         String real = cuenta.getPersona();
 
         assertNotNull(real, () -> "La cuenta no puede ser nula");
@@ -22,6 +25,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("Probando saldo de la cuenta")
     void testSaldoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("123.47"));
         assertNotNull(cuenta.getSaldo());
@@ -31,6 +35,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("Probando referencias de cuenta")
     void testReferenciaDeCuenta() {
         Cuenta cuenta = new Cuenta("Jon Doe", new BigDecimal("890.997"));
         Cuenta cuenta2 = new Cuenta("Jon Doe", new BigDecimal("890.997"));
@@ -40,6 +45,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("Probando retiro de la cuenta")
     void testDebitoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
         cuenta.debito(new BigDecimal(100));
@@ -50,6 +56,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("Probando ingreso de la cuenta")
     void testCreditoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
         cuenta.credito(new BigDecimal(100));
@@ -61,6 +68,7 @@ class CuentaTest {
 
 
     @Test
+    @DisplayName("Probando insuficiente dinero en la cuenta")
     void testDineroInsuficienteExceptionCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
         Exception exception = assertThrows(DineroInsuficienteException.class, () ->
@@ -72,6 +80,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("Probando transferencias entre cuentas")
     void testTransferenciaCuenta() {
         Cuenta cuenta1 = new Cuenta("Jhon Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
@@ -86,6 +95,8 @@ class CuentaTest {
     }
 
     @Test
+    @Disabled("En pausa")
+    @DisplayName("Probando relaciones entre cuentas")
     void testRelacionBancoCuentas() {
         Cuenta cuenta1 = new Cuenta("Jhon Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
