@@ -2,13 +2,22 @@ package models;
 
 import exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
-
 import java.math.BigDecimal;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CuentaTest {
     Cuenta cuenta;
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Inicializando la clase test");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("Finalizando la clase test");
+    }
 
     @BeforeEach
     void initTestMethod() {
