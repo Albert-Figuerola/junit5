@@ -2,7 +2,9 @@ package models;
 
 import exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -11,23 +13,23 @@ class CuentaTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.out.println("Inicializando la clase test");
+//        System.out.println("Inicializando la clase test");
     }
 
     @AfterAll
     static void afterAll() {
-        System.out.println("Finalizando la clase test");
+//        System.out.println("Finalizando la clase test");
     }
 
     @BeforeEach
     void initTestMethod() {
         this.cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-        System.out.println("Ejecutando init del metodo test");
+//        System.out.println("Ejecutando init del metodo test");
     }
 
     @AfterEach
     void tearDown() {
-        System.out.println("Finalizando el método de prueba");
+//        System.out.println("Finalizando el método de prueba");
     }
 
     @Test
@@ -137,5 +139,61 @@ class CuentaTest {
                 )
         );
     }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testSoloWindows() { }
+
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void testSoloMAC() { }
+
+    @Test
+    @DisabledOnOs(OS.MAC)
+    void testNoMAC() { }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void testSolJdk8() { }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_19)
+    void testSoloJdk19() { }
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_19)
+    void testNoSoloJdk19() { }
+
+    @Test
+    void printSystemProperties() {
+//        System.getProperties().list(System.out);
+//        Properties properties = System.getProperties();
+//        properties.forEach((k, v) -> System.out.println(k + " : " + v));
+    }
+
+    @Test
+    @DisplayName("Test Java version")
+    @EnabledIfSystemProperty(named = "java.version", matches = ".*19.*")
+    void testJavaVersion() { }
+
+    @Test
+    @DisplayName("Arch 64")
+    @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testOnly64() { }
+
+    @Test
+    @DisplayName("Arch 32")
+    @EnabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testIf32() { }
+
+    @Test
+    @DisplayName("Test if user name")
+    @EnabledIfSystemProperty(named = "user.name", matches = "gaddex")
+    void testIfUserName() { }
+
+    @Test
+    @DisplayName("Test if DEV")
+    @EnabledIfSystemProperty(named = "ENV", matches = "dev")
+    void testDev() { }
 
 }
