@@ -3,6 +3,7 @@ package models;
 import exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +40,7 @@ class CuentaTest {
         String real = cuenta.getPersona();
 
         assertNotNull(real, () -> "La cuenta no puede ser nula");
-        assertEquals(esperado, real, () ->  "El nombre de la cuenta no coincide");
+        assertEquals(esperado, real, () -> "El nombre de la cuenta no coincide");
         assertTrue(real.equals("Andres"), () -> "Nombre cuenta esperado igual al real");
     }
 
@@ -142,27 +143,33 @@ class CuentaTest {
 
     @Test
     @EnabledOnOs(OS.WINDOWS)
-    void testSoloWindows() { }
+    void testSoloWindows() {
+    }
 
     @Test
     @EnabledOnOs({OS.LINUX, OS.MAC})
-    void testSoloMAC() { }
+    void testSoloMAC() {
+    }
 
     @Test
     @DisabledOnOs(OS.MAC)
-    void testNoMAC() { }
+    void testNoMAC() {
+    }
 
     @Test
     @EnabledOnJre(JRE.JAVA_8)
-    void testSolJdk8() { }
+    void testSolJdk8() {
+    }
 
     @Test
     @EnabledOnJre(JRE.JAVA_19)
-    void testSoloJdk19() { }
+    void testSoloJdk19() {
+    }
 
     @Test
     @DisabledOnJre(JRE.JAVA_19)
-    void testNoSoloJdk19() { }
+    void testNoSoloJdk19() {
+    }
 
     @Test
     void printSystemProperties() {
@@ -174,26 +181,55 @@ class CuentaTest {
     @Test
     @DisplayName("Test Java version")
     @EnabledIfSystemProperty(named = "java.version", matches = ".*19.*")
-    void testJavaVersion() { }
+    void testJavaVersion() {
+    }
 
     @Test
     @DisplayName("Arch 64")
     @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
-    void testOnly64() { }
+    void testOnly64() {
+    }
 
     @Test
     @DisplayName("Arch 32")
     @EnabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
-    void testIf32() { }
+    void testIf32() {
+    }
 
     @Test
     @DisplayName("Test if user name")
     @EnabledIfSystemProperty(named = "user.name", matches = "gaddex")
-    void testIfUserName() { }
+    void testIfUserName() {
+    }
 
     @Test
     @DisplayName("Test if DEV")
     @EnabledIfSystemProperty(named = "ENV", matches = "dev")
-    void testDev() { }
+    void testDev() {
+    }
+
+    @Test
+    void imprimirVariablesAmbiente() {
+        System.getenv().forEach(
+                (k, v) -> System.out.println(k + " = " + v)
+        );
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "LOGNAME", matches = "gaddex")
+    void testLogname() { }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "USER", matches = "gaddex")
+    void testUser() { }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "dev")
+    void testEnv() { }
+
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
+    void testEnvProdDisabled() { }
 
 }
