@@ -7,6 +7,7 @@ import org.junit.jupiter.api.condition.*;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CuentaTest {
@@ -231,5 +232,28 @@ class CuentaTest {
     @Test
     @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
     void testEnvProdDisabled() { }
+
+    @Test
+    @DisplayName("Probando saldo de la cuenta en Dev")
+    void testSaldoCuentaDev() {
+        boolean isDev = "dev".equals(System.getProperty("ENV"));
+        assumeTrue(isDev);
+        assertNotNull(cuenta.getSaldo());
+        assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
+        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0);
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
+
+    @Test
+    @DisplayName("Probando saldo de la cuenta en Dev 2")
+    void testSaldoCuentaDev2() {
+        boolean isDev = "dev".equals(System.getProperty("ENV"));
+        assumingThat(isDev, () -> {
+            assertNotNull(cuenta.getSaldo());
+            assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
+        });
+        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0);
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+    }
 
 }
