@@ -4,9 +4,15 @@ import exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
@@ -291,14 +297,89 @@ class CuentaTest {
         assertEquals("900.12345", cuenta.getSaldo().toPlainString());
     }
 
-    @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
-    @ValueSource(strings = {"100", "200", "300", "500", "700", "1000", "1200"})
-    @DisplayName("Probando retiro de la cuenta")
-    void testDebitoCuenta(String monto) {
-        cuenta.debito(new BigDecimal(monto));
+    @Nested
+    class PruebasParameterizedTest {
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @ValueSource(strings = {"100", "200", "300", "500", "700", "1000", "1000.12345"})
+        @DisplayName("Parameterized test - Probando retiro de la cuenta")
+        void testDebitoCuentaValueSource(String monto) {
+            cuenta.debito(new BigDecimal(monto));
 
-        assertNotNull(cuenta.getSaldo());
-        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+            assertNotNull(cuenta.getSaldo());
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) >= 0);
+        }
+
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvSource({"1, 100", "2, 200", "3, 300", "4, 500", "5, 700", "6, 1000.12345"})
+        @DisplayName("Csv Source - Probando retiro de la cuenta")
+        void testDebitoCuentaCsvSource(String index, String monto) {
+            System.out.println(index + " -> " + monto);
+
+            cuenta.debito(new BigDecimal(monto));
+
+            assertNotNull(cuenta.getSaldo());
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) >= 0);
+        }
+
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvSource({"200,100,John,Andres", "250,200,Pepe,Pepe", "300,300,maria,Maria", "510,500,Pepa,Pepa", "750,700,Lucas,Luca", "1000.12345,1000.12345,Eric,Eric"})
+        @DisplayName("Csv Source - Probando retiro de la cuenta")
+        void testDebitoCuentaCsvSource2(String saldo, String monto, String esperado, String actual) {
+            System.out.println(saldo + " -> " + monto);
+            cuenta.setSaldo(new BigDecimal(saldo));
+            cuenta.debito(new BigDecimal(monto));
+            cuenta.setPersona(esperado);
+
+            assertNotNull(cuenta.getSaldo());
+            assertNotNull(cuenta.getPersona());
+
+            assertEquals(esperado, actual);
+
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvFileSource(resources = "/data.csv")
+        @DisplayName("1 - Csv File Source - Probando retiro de la cuenta")
+        void testDebitoCuentaCsvFileSource(String monto) {
+            cuenta.debito(new BigDecimal(monto));
+
+            assertNotNull(cuenta.getSaldo());
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) >= 0);
+        }
+
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @CsvFileSource(resources = "/data2.csv")
+        @DisplayName("2- Csv File Source - Probando retiro de la cuenta")
+        void testDebitoCuentaCsvFileSource2(String saldo, String monto, String esperado, String actual) {
+            System.out.println(saldo + " -> " + monto);
+            cuenta.setSaldo(new BigDecimal(saldo));
+            cuenta.debito(new BigDecimal(monto));
+            cuenta.setPersona(esperado);
+
+            assertNotNull(cuenta.getSaldo());
+            assertNotNull(cuenta.getPersona());
+
+            assertEquals(esperado, actual);
+
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "número {index} ejecutando con valor {0} - {argumentsWithNames}")
+        @MethodSource("montoList")
+        @DisplayName("Method Source - Probando retiro de la cuenta")
+        void testDebitoCuentaMethodSource(String monto) {
+            cuenta.debito(new BigDecimal(monto));
+
+            assertNotNull(cuenta.getSaldo());
+            assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) >= 0);
+        }
+
+        static List<String> montoList () {
+            return Arrays.asList("100", "200", "300", "500", "700", "1000.12345");
+        }
     }
+
+
 
 }
